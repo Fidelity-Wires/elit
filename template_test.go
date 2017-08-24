@@ -2,6 +2,7 @@ package elit
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 )
 
@@ -13,12 +14,11 @@ func TestMappingsMarshalJSON(t *testing.T) {
 		{
 			mappings: Mappings{
 				Type: map[string]interface{}{
-					"integer": 1,
+					"integer": float64(1),
 					"string":  "string",
 					"boolean": true,
 				},
 			},
-			out: `{"integer":1,"string":"string","boolean":true}`,
 		},
 	}
 
@@ -28,8 +28,15 @@ func TestMappingsMarshalJSON(t *testing.T) {
 			t.Fatalf("json.Marshal got error: %s", err)
 		}
 
-		if string(b) != row.out {
-			t.Errorf("output expected(%s) but (%s)", row.out, string(b))
+		o := map[string]interface{}{}
+		if err := json.Unmarshal(b, &o); err != nil {
+			t.Fatalf("json.Unmarshal got error: %s", err)
+		}
+
+		for k := range o {
+			if !reflect.DeepEqual(o[k], row.mappings.Type[k]) {
+				t.Errorf("type key (%s) expected (%v) but (%v)", k, row.mappings.Type[k], o[k])
+			}
 		}
 	}
 }

@@ -6,17 +6,20 @@ import (
 	"fmt"
 )
 
+// Template is root object
 type Template struct {
 	Template string   `json:"template"`
 	Settings Settings `json:"settings"`
 	Mappings Mappings `json:"mappings"`
 }
 
+// Settings node settings
 type Settings struct {
 	NumberOfShards   uint `json:"number_of_shards"`
 	NumberOfReplicas uint `json:"number_of_replicas"`
 }
 
+// Mappings has pair of key properties
 type Mappings struct {
 	Type map[string]interface{}
 }
