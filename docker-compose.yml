@@ -1,0 +1,8 @@
+version: '3'
+services:
+  elit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/go/src/github.com/ushios/elit
