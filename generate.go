@@ -1,7 +1,7 @@
 package elit
 
 import (
-	"fmt"
+	"log"
 	"reflect"
 	"strings"
 )
@@ -15,7 +15,7 @@ func Generate(v interface{}) {
 		field := rt.Field(i)
 		a := jsonAttributeName(field)
 
-		fmt.Println(a)
+		log.Println(a)
 	}
 }
 

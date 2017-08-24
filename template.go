@@ -24,6 +24,26 @@ type Mappings struct {
 	Type map[string]interface{}
 }
 
+// Properties .
+type Properties struct {
+	Properties map[string]Property
+}
+
+// Property .
+type Property struct {
+	Type      string           `json:"type"`
+	Format    string           `json:"format"`
+	FieldData string           `json:"fielddata"`
+	Fields    map[string]Field `json:"fields"`
+	Properies map[string]Property
+}
+
+// Field .
+type Field struct {
+	Type        string `json:"type"`
+	IgnoreAbove int    `json:"ignore_above"`
+}
+
 // MarshalJSON for json marshaler
 func (m Mappings) MarshalJSON() ([]byte, error) {
 	b := bytes.Buffer{}
