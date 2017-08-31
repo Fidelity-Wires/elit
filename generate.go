@@ -7,7 +7,12 @@ import (
 	"strings"
 )
 
-type propertyEncoderFunc func(v interface{}) (Property, error)
+// PropertyEncoderFunc function for generate
+type PropertyEncoderFunc func(reflect.StructField, map[string]Property) error
+
+type GenerateOption struct {
+	Presets map[string]PropertyEncoderFunc
+}
 
 // Generate .
 func Generate(v interface{}) {
@@ -22,20 +27,26 @@ func Generate(v interface{}) {
 	}
 }
 
-func TypePropertyEncoder(field reflect.StructField) (propertyEncoderFunc, error) {
+// TypePropertyEncoder .
+func TypePropertyEncoder(field reflect.StructField, opt *GenerateOption) (PropertyEncoderFunc, error) {
+	elit := elitPropertyName(field)
+	if elit != "" {
+		return opt.Presets[elit], nil
+	}
+
 	switch field.Type.Kind() {
 	case reflect.Bool:
 		return boolEncoder, nil
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return boolEncoder, nil
+		return integerEncoder, nil
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
-		return boolEncoder, nil
+		return integerEncoder, nil
 	case reflect.Float32:
-		return boolEncoder, nil
+		return floatEncoder, nil
 	case reflect.Float64:
-		return boolEncoder, nil
+		return floatEncoder, nil
 	case reflect.String:
-		return boolEncoder, nil
+		return stringEncoder, nil
 	case reflect.Interface:
 		return boolEncoder, nil
 	case reflect.Struct:
@@ -53,8 +64,42 @@ func TypePropertyEncoder(field reflect.StructField) (propertyEncoderFunc, error)
 	}
 }
 
-func boolEncoder(v interface{}) (Property, error) {
-	return Property{}, nil
+func boolEncoder(f reflect.StructField, m map[string]Property) error {
+	return nil
+}
+
+func stringEncoder(f reflect.StructField, m map[string]Property) error {
+	key := jsonAttributeName(f)
+	m[key] = Property{
+		Type:      PropertyTypeText,
+		FieldData: true,
+		Fields: map[string]Property{
+			"keyword": Property{
+				Type:        PropertyTypeKeyword,
+				IgnoreAbove: 256,
+			},
+		},
+	}
+
+	return nil
+}
+
+func integerEncoder(f reflect.StructField, m map[string]Property) error {
+	key := jsonAttributeName(f)
+	m[key] = Property{
+		Type: PropertyTypeInteger,
+	}
+
+	return nil
+}
+
+func floatEncoder(f reflect.StructField, m map[string]Property) error {
+	key := jsonAttributeName(f)
+	m[key] = Property{
+		Type: PropertyTypeFloat,
+	}
+
+	return nil
 }
 
 func jsonAttributeName(f reflect.StructField) string {
@@ -78,4 +123,10 @@ func jsonAttributeName(f reflect.StructField) string {
 	}
 
 	return first
+}
+
+func elitPropertyName(f reflect.StructField) string {
+	elit := f.Tag.Get("elit")
+
+	return elit
 }
