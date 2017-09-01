@@ -17,8 +17,13 @@ type SampleModel struct {
 }
 
 type SubModel struct {
-	None int    `json:"-"`
-	Body string `json:"body"`
+	None  int    `json:"-"`
+	Body  string `json:"body"`
+	Child ChildModel
+}
+
+type ChildModel struct {
+	Name string `json:"name"`
 }
 
 func TestGenerate(t *testing.T) {
