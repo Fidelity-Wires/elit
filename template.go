@@ -47,6 +47,7 @@ type PropertyType string
 const (
 	PropertyTypeDate     PropertyType = "date"
 	PropertyTypeInteger  PropertyType = "integer"
+	PropertyTypeFloat    PropertyType = "float"
 	PropertyTypeText     PropertyType = "text"
 	PropertyTypeGeoPoint PropertyType = "get_point"
 	PropertyTypeNested   PropertyType = "nested"

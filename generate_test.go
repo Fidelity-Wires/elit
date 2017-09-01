@@ -1,9 +1,14 @@
 package elit
 
-import "testing"
+import (
+	"encoding/json"
+	"fmt"
+	"testing"
+)
 
 type SampleModel struct {
-	ID        int `json:"id"`
+	ID        int     `json:"id"`
+	Second    float64 `json:"second"`
 	Empty     string
 	Hyphen    string `json:"-"`
 	OmitEmpty string `json:"omit_empty,omitempty"`
@@ -20,6 +25,17 @@ func TestGenerate(t *testing.T) {
 	}
 
 	for _, row := range table {
-		Generate(row.input)
+		tpl, err := Generate(row.input, nil)
+		if err != nil {
+			t.Fatalf("Generate got error: %s", err)
+
+		}
+
+		b, err := json.Marshal(tpl)
+		if err != nil {
+			t.Fatalf("json.Marshal: %s", err)
+		}
+
+		fmt.Println(string(b))
 	}
 }
