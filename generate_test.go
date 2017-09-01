@@ -13,7 +13,13 @@ type SampleModel struct {
 	Hyphen    string   `json:"-"`
 	OmitEmpty string   `json:"omit_empty,omitempty"`
 	Normal    string   `json:"normal"`
+	Geo       GeoModel `json:"geo" elit:"geo"`
 	Sub       SubModel `json:"sub"`
+}
+
+type GeoModel struct {
+	Lat int
+	Lon int
 }
 
 type SubModel struct {
@@ -36,7 +42,7 @@ func TestGenerate(t *testing.T) {
 	}
 
 	for _, row := range table {
-		tpl, err := Generate(row.input, nil)
+		tpl, err := Generate(row.input, NewGenerateOption())
 		if err != nil {
 			t.Fatalf("Generate got error: %s", err)
 
