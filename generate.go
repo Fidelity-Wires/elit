@@ -17,24 +17,44 @@ type GenerateOption struct {
 // Generate .
 func Generate(v interface{}, opts *GenerateOption) (map[string]Property, error) {
 	m := map[string]Property{}
-	rt := reflect.TypeOf(v)
-	// rv := reflect.ValueOf(v)
 
-	switch rt.Kind() {
-	case reflect.Struct:
-		structEncoder("", v, m, opts)
-	default:
-		return m, fmt.Errorf("v must be struct")
+	if err := generate(v, m, opts); err != nil {
+		return m, fmt.Errorf("E got error: %s", err)
 	}
 
 	return m, nil
+}
+
+func generate(v interface{}, m map[string]Property, opts *GenerateOption) error {
+	rt := reflect.TypeOf(v)
+
+	for i := 0; i < rt.NumField(); i++ {
+		field := rt.Field(i)
+
+		key := jsonAttributeName(field)
+		if key != "" {
+			encoder, err := TypePropertyEncoder(field, opts)
+			if err != nil {
+				return fmt.Errorf("TypePropertyEncoder got error: %s", err)
+			}
+			if err := encoder(key, v, m, opts); err != nil {
+				return fmt.Errorf("encoder got error: %s", err)
+			}
+		}
+	}
+
+	return nil
 }
 
 // TypePropertyEncoder .
 func TypePropertyEncoder(field reflect.StructField, opt *GenerateOption) (PropertyEncoderFunc, error) {
 	elit := elitPropertyName(field)
 	if elit != "" {
-		return opt.Presets[elit], nil
+		e, ok := opt.Presets[elit]
+		if !ok {
+			return nil, fmt.Errorf("encoder not found in presets")
+		}
+		return e, nil
 	}
 
 	switch field.Type.Kind() {
@@ -65,6 +85,33 @@ func TypePropertyEncoder(field reflect.StructField, opt *GenerateOption) (Proper
 	default:
 		return nil, fmt.Errorf("unsupported type")
 	}
+}
+
+func structEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
+	rt := reflect.TypeOf(v)
+
+	child := map[string]Property{}
+	m[key] = Property{
+		Type:      PropertyTypeNested,
+		Properies: child,
+	}
+
+	for i := 0; i < rt.NumField(); i++ {
+		field := rt.Field(i)
+
+		k := jsonAttributeName(field)
+		if key != "" {
+			encoder, err := TypePropertyEncoder(field, opts)
+			if err != nil {
+				return fmt.Errorf("TypePropertyEncoder got error: %s", err)
+			}
+			if err := encoder(k, v, child, opts); err != nil {
+				return fmt.Errorf("encoder got error: %s", err)
+			}
+		}
+	}
+
+	return nil
 }
 
 func boolEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
@@ -99,25 +146,6 @@ func floatEncoder(key string, v interface{}, m map[string]Property, opts *Genera
 		Type: PropertyTypeFloat,
 	}
 
-	return nil
-}
-
-func structEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
-	rt := reflect.TypeOf(v)
-
-	for i := 0; i < rt.NumField(); i++ {
-		field := rt.Field(i)
-		encoder, err := TypePropertyEncoder(field, opts)
-		if err != nil {
-			return fmt.Errorf("TypePropertyEncoder got error: %s", err)
-		}
-
-		k := jsonAttributeName(field)
-		if err := encoder(k, v, m, opts); err != nil {
-			return fmt.Errorf("encoder got error: %s", err)
-		}
-
-	}
 	return nil
 }
 

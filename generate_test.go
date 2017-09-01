@@ -7,7 +7,8 @@ import (
 )
 
 type SampleModel struct {
-	ID        int `json:"id"`
+	ID        int     `json:"id"`
+	Second    float64 `json:"second"`
 	Empty     string
 	Hyphen    string `json:"-"`
 	OmitEmpty string `json:"omit_empty,omitempty"`
