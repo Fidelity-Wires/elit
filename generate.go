@@ -9,11 +9,6 @@ import (
 // PropertyEncoderFunc function for generate
 type PropertyEncoderFunc func(key string, rt reflect.Type, properties map[string]Property, opts *GenerateOption) error
 
-// GenerateOption is elit generate options
-type GenerateOption struct {
-	Presets map[string]PropertyEncoderFunc
-}
-
 // Generate .
 func Generate(v interface{}, opts *GenerateOption) (map[string]Property, error) {
 	m := map[string]Property{}
@@ -47,14 +42,16 @@ func generate(v interface{}, m map[string]Property, opts *GenerateOption) error 
 }
 
 // TypePropertyEncoder .
-func TypePropertyEncoder(field reflect.StructField, opt *GenerateOption) (PropertyEncoderFunc, error) {
-	elit := elitPropertyName(field)
-	if elit != "" {
-		e, ok := opt.Presets[elit]
-		if !ok {
-			return nil, fmt.Errorf("encoder not found in presets")
+func TypePropertyEncoder(field reflect.StructField, opts *GenerateOption) (PropertyEncoderFunc, error) {
+	if opts != nil {
+		elit := elitPropertyName(field)
+		if elit != "" {
+			e, ok := opts.Presets[elit]
+			if !ok {
+				return nil, fmt.Errorf("encoder not found in presets")
+			}
+			return e, nil
 		}
-		return e, nil
 	}
 
 	switch field.Type.Kind() {

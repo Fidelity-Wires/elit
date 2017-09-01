@@ -49,7 +49,7 @@ const (
 	PropertyTypeInteger  PropertyType = "integer"
 	PropertyTypeFloat    PropertyType = "float"
 	PropertyTypeText     PropertyType = "text"
-	PropertyTypeGeoPoint PropertyType = "get_point"
+	PropertyTypeGeoPoint PropertyType = "geo_point"
 	PropertyTypeNested   PropertyType = "nested"
 	PropertyTypeKeyword  PropertyType = "keyword"
 )
