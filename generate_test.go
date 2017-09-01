@@ -10,9 +10,15 @@ type SampleModel struct {
 	ID        int     `json:"id"`
 	Second    float64 `json:"second"`
 	Empty     string
-	Hyphen    string `json:"-"`
-	OmitEmpty string `json:"omit_empty,omitempty"`
-	Normal    string `json:"normal"`
+	Hyphen    string   `json:"-"`
+	OmitEmpty string   `json:"omit_empty,omitempty"`
+	Normal    string   `json:"normal"`
+	Sub       SubModel `json:"sub"`
+}
+
+type SubModel struct {
+	None int    `json:"-"`
+	Body string `json:"body"`
 }
 
 func TestGenerate(t *testing.T) {

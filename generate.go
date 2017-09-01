@@ -7,7 +7,7 @@ import (
 )
 
 // PropertyEncoderFunc function for generate
-type PropertyEncoderFunc func(key string, v interface{}, properties map[string]Property, opts *GenerateOption) error
+type PropertyEncoderFunc func(key string, rt reflect.Type, properties map[string]Property, opts *GenerateOption) error
 
 // GenerateOption is elit generate options
 type GenerateOption struct {
@@ -37,7 +37,7 @@ func generate(v interface{}, m map[string]Property, opts *GenerateOption) error 
 			if err != nil {
 				return fmt.Errorf("TypePropertyEncoder got error: %s", err)
 			}
-			if err := encoder(key, v, m, opts); err != nil {
+			if err := encoder(key, field.Type, m, opts); err != nil {
 				return fmt.Errorf("encoder got error: %s", err)
 			}
 		}
@@ -87,9 +87,7 @@ func TypePropertyEncoder(field reflect.StructField, opt *GenerateOption) (Proper
 	}
 }
 
-func structEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
-	rt := reflect.TypeOf(v)
-
+func structEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	child := map[string]Property{}
 	m[key] = Property{
 		Type:      PropertyTypeNested,
@@ -105,7 +103,7 @@ func structEncoder(key string, v interface{}, m map[string]Property, opts *Gener
 			if err != nil {
 				return fmt.Errorf("TypePropertyEncoder got error: %s", err)
 			}
-			if err := encoder(k, v, child, opts); err != nil {
+			if err := encoder(k, field.Type, child, opts); err != nil {
 				return fmt.Errorf("encoder got error: %s", err)
 			}
 		}
@@ -114,11 +112,11 @@ func structEncoder(key string, v interface{}, m map[string]Property, opts *Gener
 	return nil
 }
 
-func boolEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
+func boolEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	return nil
 }
 
-func stringEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
+func stringEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
 		Type:      PropertyTypeText,
 		FieldData: true,
@@ -133,7 +131,7 @@ func stringEncoder(key string, v interface{}, m map[string]Property, opts *Gener
 	return nil
 }
 
-func integerEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
+func integerEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
 		Type: PropertyTypeInteger,
 	}
@@ -141,7 +139,7 @@ func integerEncoder(key string, v interface{}, m map[string]Property, opts *Gene
 	return nil
 }
 
-func floatEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
+func floatEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
 		Type: PropertyTypeFloat,
 	}
@@ -149,7 +147,7 @@ func floatEncoder(key string, v interface{}, m map[string]Property, opts *Genera
 	return nil
 }
 
-func geoPointEncoder(key string, v interface{}, m map[string]Property, opts *GenerateOption) error {
+func geoPointEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
 		Type: PropertyTypeGeoPoint,
 	}
