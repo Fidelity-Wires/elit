@@ -150,6 +150,10 @@ func arrayEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gene
 }
 
 func boolEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	m[key] = Property{
+		Type: PropertyTypeBoolean,
+	}
+
 	return nil
 }
 
