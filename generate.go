@@ -22,10 +22,9 @@ func Generate(v interface{}, opts *GenerateOption) (map[string]Property, error) 
 
 func generate(v interface{}, m map[string]Property, opts *GenerateOption) error {
 	rt := reflect.TypeOf(v)
+	fields := Fields(rt)
 
-	for i := 0; i < rt.NumField(); i++ {
-		field := rt.Field(i)
-
+	for _, field := range fields {
 		key := jsonAttributeName(field)
 		if key != "" {
 			encoder, err := TypePropertyEncoder(field, opts)
@@ -39,6 +38,21 @@ func generate(v interface{}, m map[string]Property, opts *GenerateOption) error 
 	}
 
 	return nil
+}
+
+// Fields get all fields
+func Fields(t reflect.Type) []reflect.StructField {
+	fields := []reflect.StructField{}
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		if field.Anonymous {
+			fields = Fields(field.Type)
+		} else {
+			fields = append(fields, field)
+		}
+	}
+
+	return fields
 }
 
 // TypePropertyEncoder .
@@ -91,9 +105,9 @@ func structEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gen
 		Properies: child,
 	}
 
-	for i := 0; i < rt.NumField(); i++ {
-		field := rt.Field(i)
+	fields := Fields(rt)
 
+	for _, field := range fields {
 		k := jsonAttributeName(field)
 		if key != "" {
 			encoder, err := TypePropertyEncoder(field, opts)
@@ -104,6 +118,19 @@ func structEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gen
 				return fmt.Errorf("encoder got error: %s", err)
 			}
 		}
+	}
+
+	return nil
+}
+
+func ptrEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	encoder, err := selectFromKind(rt.Elem().Kind())
+	if err != nil {
+		return fmt.Errorf("selectFromKind got error: %s", err)
+	}
+
+	if err := encoder(key, rt.Elem(), m, opts); err != nil {
+		return fmt.Errorf("encoder got error: %s", err)
 	}
 
 	return nil
