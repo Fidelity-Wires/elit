@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
-
-	umanrest "github.com/fidelitywires/uman-rest/app/umanrest/v1"
 )
 
 type SampleModel struct {
@@ -43,9 +41,6 @@ func TestGenerate(t *testing.T) {
 	}{
 		{
 			input: SampleModel{},
-		},
-		{
-			input: umanrest.Measurement{},
 		},
 	}
 
