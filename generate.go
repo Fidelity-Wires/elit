@@ -54,7 +54,11 @@ func TypePropertyEncoder(field reflect.StructField, opts *GenerateOption) (Prope
 		}
 	}
 
-	switch field.Type.Kind() {
+	return selectFromKind(field.Type.Kind())
+}
+
+func selectFromKind(k reflect.Kind) (PropertyEncoderFunc, error) {
+	switch k {
 	case reflect.Bool:
 		return boolEncoder, nil
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -69,13 +73,15 @@ func TypePropertyEncoder(field reflect.StructField, opts *GenerateOption) (Prope
 		return stringEncoder, nil
 	case reflect.Struct:
 		return structEncoder, nil
-	case reflect.Ptr, reflect.Slice:
+	case reflect.Array, reflect.Slice:
+		return arrayEncoder, nil
+	case reflect.Ptr:
 		return boolEncoder, nil
-	case reflect.Array, reflect.Map, reflect.Interface:
-		return nil, fmt.Errorf("unsupported type: %v", field.Type.Kind())
-	default:
-		return nil, fmt.Errorf("unsupported type: %v", field.Type.Kind())
+	case reflect.Map, reflect.Interface:
+		return nil, fmt.Errorf("unsupported type: %v", k)
 	}
+
+	return nil, fmt.Errorf("unsupported type: %v", k)
 }
 
 func structEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
@@ -98,6 +104,19 @@ func structEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gen
 				return fmt.Errorf("encoder got error: %s", err)
 			}
 		}
+	}
+
+	return nil
+}
+
+func arrayEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	encoder, err := selectFromKind(rt.Elem().Kind())
+	if err != nil {
+		return fmt.Errorf("selectFromKind got error: %s", err)
+	}
+
+	if err := encoder(key, rt.Elem(), m, opts); err != nil {
+		return fmt.Errorf("encoder got error: %s", err)
 	}
 
 	return nil

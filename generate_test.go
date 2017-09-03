@@ -9,14 +9,17 @@ import (
 )
 
 type SampleModel struct {
-	ID        int     `json:"id"`
-	Second    float64 `json:"second"`
-	Empty     string
-	Hyphen    string   `json:"-"`
-	OmitEmpty string   `json:"omit_empty,omitempty"`
-	Normal    string   `json:"normal"`
-	Geo       GeoModel `json:"geo" elit:"geo"`
-	Sub       SubModel `json:"sub"`
+	ID         int     `json:"id"`
+	point      uint    `json:"point"`
+	Second     float64 `json:"second"`
+	Empty      string
+	Hyphen     string   `json:"-"`
+	OmitEmpty  string   `json:"omit_empty,omitempty"`
+	Normal     string   `json:"normal"`
+	StringList []string `json:"string_list"`
+	IntList    []int    `json:"int_list"`
+	Geo        GeoModel `json:"geo" elit:"geo"`
+	Sub        SubModel `json:"sub"`
 }
 
 type GeoModel struct {
