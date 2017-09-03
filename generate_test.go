@@ -2,7 +2,7 @@ package elit
 
 import (
 	"encoding/json"
-	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -63,17 +63,19 @@ func TestGenerate(t *testing.T) {
 	}
 
 	for _, row := range table {
-		tpl, err := Generate(row.input, NewGenerateOption())
+		propertyMap, err := Generate(row.input, NewGenerateOption())
 		if err != nil {
 			t.Fatalf("Generate got error: %s", err)
 
 		}
 
-		b, err := json.Marshal(tpl)
-		if err != nil {
-			t.Fatalf("json.Marshal: %s", err)
+		res := map[string]Property{}
+		if err := json.Unmarshal([]byte(row.result), &res); err != nil {
+			t.Errorf("json.Unmarshal got error: %s", err)
 		}
 
-		fmt.Println(string(b))
+		if !reflect.DeepEqual(res, propertyMap) {
+			t.Errorf("result map expected (%v) but (%v)", res, propertyMap)
+		}
 	}
 }
