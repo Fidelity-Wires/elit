@@ -67,20 +67,14 @@ func TypePropertyEncoder(field reflect.StructField, opts *GenerateOption) (Prope
 		return floatEncoder, nil
 	case reflect.String:
 		return stringEncoder, nil
-	case reflect.Interface:
-		return boolEncoder, nil
 	case reflect.Struct:
 		return structEncoder, nil
-	case reflect.Map:
+	case reflect.Ptr, reflect.Slice:
 		return boolEncoder, nil
-	case reflect.Slice:
-		return boolEncoder, nil
-	case reflect.Array:
-		return boolEncoder, nil
-	case reflect.Ptr:
-		return boolEncoder, nil
+	case reflect.Array, reflect.Map, reflect.Interface:
+		return nil, fmt.Errorf("unsupported type: %v", field.Type.Kind())
 	default:
-		return nil, fmt.Errorf("unsupported type")
+		return nil, fmt.Errorf("unsupported type: %v", field.Type.Kind())
 	}
 }
 
