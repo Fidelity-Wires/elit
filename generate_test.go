@@ -10,7 +10,7 @@ import (
 
 type SampleModel struct {
 	ID         int     `json:"id"`
-	point      uint    `json:"point"`
+	Point      uint    `json:"point"`
 	Second     float64 `json:"second"`
 	Empty      string
 	Hyphen     string   `json:"-"`
