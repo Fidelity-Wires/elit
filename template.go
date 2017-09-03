@@ -52,4 +52,5 @@ const (
 	PropertyTypeGeoPoint PropertyType = "geo_point"
 	PropertyTypeNested   PropertyType = "nested"
 	PropertyTypeKeyword  PropertyType = "keyword"
+	PropertyTypeBoolean  PropertyType = "boolean"
 )
