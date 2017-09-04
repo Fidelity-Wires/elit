@@ -159,14 +159,7 @@ func boolEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gener
 
 func stringEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
-		Type:      PropertyTypeText,
-		FieldData: true,
-		Fields: map[string]Property{
-			"keyword": Property{
-				Type:        PropertyTypeKeyword,
-				IgnoreAbove: 256,
-			},
-		},
+		Type: PropertyTypeText,
 	}
 
 	return nil
