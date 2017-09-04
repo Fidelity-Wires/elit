@@ -68,10 +68,15 @@ func TypePropertyEncoder(field reflect.StructField, opts *GenerateOption) (Prope
 		}
 	}
 
-	return selectFromKind(field.Type.Kind())
+	return selectFromKind(field.Type.Kind(), opts)
 }
 
-func selectFromKind(k reflect.Kind) (PropertyEncoderFunc, error) {
+func selectFromKind(k reflect.Kind, opts *GenerateOption) (PropertyEncoderFunc, error) {
+	e, ok := opts.Encoders[k]
+	if ok {
+		return e, nil
+	}
+
 	switch k {
 	case reflect.Bool:
 		return boolEncoder, nil
@@ -124,7 +129,7 @@ func structEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gen
 }
 
 func ptrEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
-	encoder, err := selectFromKind(rt.Elem().Kind())
+	encoder, err := selectFromKind(rt.Elem().Kind(), opts)
 	if err != nil {
 		return fmt.Errorf("selectFromKind got error: %s", err)
 	}
@@ -137,7 +142,7 @@ func ptrEncoder(key string, rt reflect.Type, m map[string]Property, opts *Genera
 }
 
 func arrayEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
-	encoder, err := selectFromKind(rt.Elem().Kind())
+	encoder, err := selectFromKind(rt.Elem().Kind(), opts)
 	if err != nil {
 		return fmt.Errorf("selectFromKind got error: %s", err)
 	}

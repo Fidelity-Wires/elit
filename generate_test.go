@@ -2,6 +2,7 @@ package elit
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -53,6 +54,20 @@ type ChildModel struct {
 	Name string `json:"name"`
 }
 
+func stringEncFunc(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	m[key] = Property{
+		Type:      PropertyTypeText,
+		FieldData: true,
+		Fields: map[string]Property{
+			"words": Property{
+				Type: PropertyTypeKeyword,
+			},
+		},
+	}
+
+	return nil
+}
+
 func TestGenerate(t *testing.T) {
 	table := []struct {
 		input  interface{}
@@ -65,7 +80,12 @@ func TestGenerate(t *testing.T) {
 	}
 
 	for _, row := range table {
-		propertyMap, err := Generate(row.input, NewGenerateOption())
+		opts := NewGenerateOption()
+		opts.Encoders = map[reflect.Kind]PropertyEncoderFunc{
+			reflect.String: stringEncFunc,
+		}
+
+		propertyMap, err := Generate(row.input, opts)
 		if err != nil {
 			t.Fatalf("Generate got error: %s", err)
 		}
@@ -75,8 +95,8 @@ func TestGenerate(t *testing.T) {
 			t.Errorf("json.Unmarshal got error: %s", err)
 		}
 
-		// b, _ := json.Marshal(propertyMap)
-		// fmt.Println(string(b))
+		b, _ := json.Marshal(propertyMap)
+		fmt.Println(string(b))
 
 		if !reflect.DeepEqual(res, propertyMap) {
 			t.Errorf("result map expected (%v) but (%v)", res, propertyMap)
