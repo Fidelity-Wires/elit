@@ -53,6 +53,20 @@ type ChildModel struct {
 	Name string `json:"name"`
 }
 
+func stringEncFunc(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	m[key] = Property{
+		Type:      PropertyTypeText,
+		FieldData: true,
+		Fields: map[string]Property{
+			"words": Property{
+				Type: PropertyTypeKeyword,
+			},
+		},
+	}
+
+	return nil
+}
+
 func TestGenerate(t *testing.T) {
 	table := []struct {
 		input  interface{}
@@ -60,12 +74,17 @@ func TestGenerate(t *testing.T) {
 	}{
 		{
 			input:  SampleModel{},
-			result: `{"Empty":{"type":"text"},"base_base_sample_model_live":{"type":"integer"},"base_sample_model_name":{"type":"text"},"geo":{"type":"geo_point"},"id":{"type":"integer"},"int_list":{"type":"integer"},"normal":{"type":"text"},"ok":{"type":"boolean"},"omit_empty":{"type":"text"},"point":{"type":"integer"},"psub":{"type":"boolean"},"second":{"type":"float"},"small_second":{"type":"float"},"string_list":{"type":"text"},"sub":{"type":"nested","properties":{"":{"type":"integer"},"Child":{"type":"nested","properties":{"name":{"type":"text"}}},"base_sub_model_title":{"type":"text"},"body":{"type":"text"}}}}`,
+			result: `{"Empty":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}},"base_base_sample_model_live":{"type":"integer"},"base_sample_model_name":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}},"geo":{"type":"geo_point"},"id":{"type":"integer"},"int_list":{"type":"integer"},"normal":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}},"ok":{"type":"boolean"},"omit_empty":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}},"point":{"type":"integer"},"psub":{"type":"boolean"},"second":{"type":"float"},"small_second":{"type":"float"},"string_list":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}},"sub":{"type":"nested","properties":{"":{"type":"integer"},"Child":{"type":"nested","properties":{"name":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}}}},"base_sub_model_title":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}},"body":{"type":"text","fielddata":true,"fields":{"words":{"type":"keyword"}}}}}}`,
 		},
 	}
 
 	for _, row := range table {
-		propertyMap, err := Generate(row.input, NewGenerateOption())
+		opts := NewGenerateOption()
+		opts.Encoders = map[reflect.Kind]PropertyEncoderFunc{
+			reflect.String: stringEncFunc,
+		}
+
+		propertyMap, err := Generate(row.input, opts)
 		if err != nil {
 			t.Fatalf("Generate got error: %s", err)
 		}
