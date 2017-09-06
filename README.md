@@ -27,9 +27,11 @@ t := elit.Template{
 	},
 }
 
-p, err := elit.Generate(Sample{}, nil)
+p, err := elit.Generate(Human{}, nil)
 
 t.Mappings["sample"] = elit.Type{
 	Properties: p,
 }
 ```
+
+This is sample so see also [ExampleGenerate](elit_test.go) function.
