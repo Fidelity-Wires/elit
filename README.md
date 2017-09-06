@@ -1,5 +1,5 @@
 # elit
-[![CircleCI](https://circleci.com/gh/FidelityWires/elit.svg?style=shield&circle-token=404a3db148e2ff6d7047b60c628f69b1e97d8077)](https://circleci.com/gh/FidelityWires/elit)
+[![CircleCI](https://circleci.com/gh/FidelityWires/elit.svg?style=shield&circle-token=404a3db148e2ff6d7047b60c628f69b1e97d8077)](https://circleci.com/gh/FidelityWires/elit)　[![Go Report Card](https://goreportcard.com/badge/github.com/fidelitywires/elit)](https://goreportcard.com/report/github.com/fidelitywires/elit) [![GoDoc](https://godoc.org/github.com/FidelityWires/elit?status.svg)](https://godoc.org/github.com/FidelityWires/elit)
 
 Generate elasticsearch index template from golang source code
 
