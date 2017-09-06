@@ -9,3 +9,27 @@ Generate elasticsearch index template from golang source code
 ```
 $ go get github.com/fidelitywires/elit
 ```
+
+# Usage
+
+```go
+
+type Human struct {
+	Name string
+	Age  int
+}
+
+t := elit.Template{
+	Template: "sample_template_*",
+	Settings: elit.Settings{
+		NumberOfShards:   5,
+		NumberOfReplicas: 1,
+	},
+}
+
+p, err := elit.Generate(Sample{}, nil)
+
+t.Mappings["sample"] = elit.Type{
+	Properties: p,
+}
+```
