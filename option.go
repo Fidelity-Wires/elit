@@ -14,5 +14,6 @@ func NewGenerateOption() *GenerateOption {
 		Presets: map[string]PropertyEncoderFunc{
 			"geo": geoPointEncoder,
 		},
+		Encoders: map[reflect.Kind]PropertyEncoderFunc{},
 	}
 }
