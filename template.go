@@ -25,7 +25,7 @@ type Filter struct {
 	Type        FilterType `json:"type"`
 	Format      string     `json:"format,omitempty"`
 	SynonymPath string     `json:"synonym_path,omitempty"`
-	Synonyms    []string   `json:"sysnonyms,omitempty"`
+	Synonyms    []Synonym  `json:"sysnonyms,omitempty"`
 }
 
 // Type .
