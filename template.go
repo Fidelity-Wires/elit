@@ -17,7 +17,15 @@ type Settings struct {
 // Analysis settings
 type Analysis struct {
 	Analyzer map[string]interface{} `json:"analyzer,omitempty"`
-	Filter   map[string]interface{} `json:"filter,omitempty"`
+	Filter   map[string]Filter      `json:"filter,omitempty"`
+}
+
+// Filter for analysis
+type Filter struct {
+	Type        FilterType `json:"type"`
+	Format      string     `json:"format"`
+	SynonymPath string     `json:"synonym_path,omitempty"`
+	Synonyms    []string   `json:"sysnonyms,omitempty"`
 }
 
 // Type .
@@ -51,6 +59,9 @@ type Property struct {
 // PropertyType .
 type PropertyType string
 
+// FilterType .
+type FilterType string
+
 const (
 	PropertyTypeDate     PropertyType = "date"
 	PropertyTypeInteger  PropertyType = "integer"
@@ -60,4 +71,6 @@ const (
 	PropertyTypeNested   PropertyType = "nested"
 	PropertyTypeKeyword  PropertyType = "keyword"
 	PropertyTypeBoolean  PropertyType = "boolean"
+
+	FilterTypeSynonym FilterType = "synonym"
 )
