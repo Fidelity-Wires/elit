@@ -1,10 +1,8 @@
-package elit_test
+package elit
 
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/fidelitywires/elit"
 )
 
 type Human struct {
@@ -13,22 +11,22 @@ type Human struct {
 }
 
 func ExampleGenerate() {
-	t := elit.Template{
+	t := Template{
 		Template: "sample_template_*",
-		Settings: elit.Settings{
+		Settings: Settings{
 			NumberOfShards:   5,
 			NumberOfReplicas: 1,
 		},
-		Mappings: map[string]elit.Type{},
+		Mappings: map[string]Type{},
 	}
 
-	opts := elit.NewGenerateOption()
-	p, err := elit.Generate(Human{}, opts)
+	opts := NewGenerateOption()
+	p, err := Generate(Human{}, opts)
 	if err != nil {
 		panic(err)
 	}
 
-	t.Mappings["sample"] = elit.Type{
+	t.Mappings["sample"] = Type{
 		Properties: p,
 	}
 

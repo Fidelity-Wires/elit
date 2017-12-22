@@ -9,9 +9,9 @@ type Template struct {
 
 // Settings node settings
 type Settings struct {
-	NumberOfShards   uint     `json:"number_of_shards"`
-	NumberOfReplicas uint     `json:"number_of_replicas,omitempty"`
-	Analysis         Analysis `json:"analysis,omitempty"`
+	NumberOfShards   uint      `json:"number_of_shards"`
+	NumberOfReplicas uint      `json:"number_of_replicas,omitempty"`
+	Analysis         *Analysis `json:"analysis,omitempty"`
 }
 
 // Analysis settings
