@@ -16,8 +16,14 @@ type Settings struct {
 
 // Analysis settings
 type Analysis struct {
-	Analyzer map[string]interface{} `json:"analyzer,omitempty"`
-	Filter   map[string]Filter      `json:"filter,omitempty"`
+	Analyzer map[string]Analyzer `json:"analyzer,omitempty"`
+	Filter   map[string]Filter   `json:"filter,omitempty"`
+}
+
+// Analyzer .
+type Analyzer struct {
+	Tokenizer string   `json:"tokenizer"`
+	Filter    []string `json:"filter"`
 }
 
 // Filter for analysis
