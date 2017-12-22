@@ -11,10 +11,17 @@ type Synonym struct {
 	aliases []string
 }
 
-// NewSynonym .
-func NewSynonym(origin string, aliases []string) Synonym {
+// NewMapSynonym .
+func NewMapSynonym(origin string, aliases []string) Synonym {
 	return Synonym{
 		key:     origin,
+		aliases: aliases,
+	}
+}
+
+// NewListSynonym .
+func NewListSynonym(aliases []string) Synonym {
+	return Synonym{
 		aliases: aliases,
 	}
 }
@@ -23,9 +30,13 @@ func NewSynonym(origin string, aliases []string) Synonym {
 func (s Synonym) MarshalJSON() ([]byte, error) {
 	var b bytes.Buffer
 
+	b.WriteString("\"")
 	b.WriteString(strings.Join(s.aliases, ","))
-	b.WriteString(" => ")
-	b.WriteString(s.key)
+	if s.key != "" {
+		b.WriteString(" => ")
+		b.WriteString(s.key)
+	}
+	b.WriteString("\"")
 
 	return b.Bytes(), nil
 }
