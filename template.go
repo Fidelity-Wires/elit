@@ -31,7 +31,7 @@ type Filter struct {
 	Type        FilterType `json:"type"`
 	Format      string     `json:"format,omitempty"`
 	SynonymPath string     `json:"synonym_path,omitempty"`
-	Synonyms    []Synonym  `json:"sysnonyms,omitempty"`
+	Synonyms    []Synonym  `json:"synonyms,omitempty"`
 }
 
 // Type .
@@ -55,6 +55,7 @@ type All struct {
 type Property struct {
 	All         *All                `json:"_all,omitempty"`
 	Type        PropertyType        `json:"type,omitempty"`
+	Analyzer    string              `json:"analyzer,omitempty"`
 	Format      string              `json:"format,omitempty"`
 	FieldData   bool                `json:"fielddata,omitempty"`
 	Fields      map[string]Property `json:"fields,omitempty"`
