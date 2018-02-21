@@ -25,7 +25,7 @@ func TestMappingsMarshalJSON(t *testing.T) {
 							Format: "yyyy-MM-dd'T'HH:mm:ssZ",
 						},
 						"count": Property{
-							Type: PropertyTypeInteger,
+							Type: PropertyTypeInteger64,
 						},
 						"location": Property{
 							Type: PropertyTypeGeoPoint,
@@ -57,7 +57,13 @@ func TestMappingsMarshalJSON(t *testing.T) {
 											Type: PropertyTypeKeyword,
 										},
 										"age": Property{
-											Type: PropertyTypeInteger,
+											Type: PropertyTypeInteger32,
+										},
+										"height": Property{
+											Type: PropertyTypeFloat32,
+										},
+										"weight": Property{
+											Type: PropertyTypeFloat64,
 										},
 									},
 								},
@@ -66,7 +72,7 @@ func TestMappingsMarshalJSON(t *testing.T) {
 					},
 				},
 			},
-			out: `{"_defualt_":{"_all":{"enabled":true}},"some_type":{"properties":{"@timestamp":{"type":"date","format":"yyyy-MM-dd'T'HH:mm:ssZ"},"count":{"type":"integer"},"location":{"type":"geo_point"},"object":{"type":"nested","properties":{"title":{"type":"keyword","ignore_above":256},"user":{"type":"nested","properties":{"age":{"type":"integer"},"first_name":{"type":"keyword"},"last_name":{"type":"keyword"}}}}},"word":{"type":"text","fielddata":true,"fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}`,
+			out: `{"_defualt_":{"_all":{"enabled":true}},"some_type":{"properties":{"@timestamp":{"type":"date","format":"yyyy-MM-dd'T'HH:mm:ssZ"},"count":{"type":"long"},"location":{"type":"geo_point"},"object":{"type":"nested","properties":{"title":{"type":"keyword","ignore_above":256},"user":{"type":"nested","properties":{"age":{"type":"integer"},"first_name":{"type":"keyword"},"height":{"type":"float"},"last_name":{"type":"keyword"},"weight":{"type":"double"}}}}},"word":{"type":"text","fielddata":true,"fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}`,
 		},
 	}
 
@@ -75,6 +81,7 @@ func TestMappingsMarshalJSON(t *testing.T) {
 		if err != nil {
 			t.Fatalf("json.Marshal got error: %s", err)
 		}
+		// fmt.Println(string(b))
 
 		m := map[string]Type{}
 		if err := json.Unmarshal([]byte(row.out), &m); err != nil {
