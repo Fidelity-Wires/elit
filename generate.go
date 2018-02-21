@@ -80,14 +80,14 @@ func selectFromKind(k reflect.Kind, opts *GenerateOption) (PropertyEncoderFunc, 
 	switch k {
 	case reflect.Bool:
 		return boolEncoder, nil
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return integerEncoder, nil
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
-		return integerEncoder, nil
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uintptr:
+		return integer32Encoder, nil
+	case reflect.Int64, reflect.Uint64:
+		return integer64Encoder, nil
 	case reflect.Float32:
-		return floatEncoder, nil
+		return float32Encoder, nil
 	case reflect.Float64:
-		return floatEncoder, nil
+		return float64Encoder, nil
 	case reflect.String:
 		return stringEncoder, nil
 	case reflect.Struct:
@@ -170,17 +170,33 @@ func stringEncoder(key string, rt reflect.Type, m map[string]Property, opts *Gen
 	return nil
 }
 
-func integerEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+func integer32Encoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
-		Type: PropertyTypeInteger,
+		Type: PropertyTypeInteger32,
 	}
 
 	return nil
 }
 
-func floatEncoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+func integer64Encoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
 	m[key] = Property{
-		Type: PropertyTypeFloat,
+		Type: PropertyTypeInteger64,
+	}
+
+	return nil
+}
+
+func float32Encoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	m[key] = Property{
+		Type: PropertyTypeFloat32,
+	}
+
+	return nil
+}
+
+func float64Encoder(key string, rt reflect.Type, m map[string]Property, opts *GenerateOption) error {
+	m[key] = Property{
+		Type: PropertyTypeFloat64,
 	}
 
 	return nil
