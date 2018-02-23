@@ -1,5 +1,5 @@
 # elit
-[![CircleCI](https://circleci.com/gh/FidelityWires/elit.svg?style=shield&circle-token=404a3db148e2ff6d7047b60c628f69b1e97d8077)](https://circleci.com/gh/FidelityWires/elit) [![Go Report Card](https://goreportcard.com/badge/github.com/fidelitywires/elit)](https://goreportcard.com/report/github.com/fidelitywires/elit) [![GoDoc](https://godoc.org/github.com/FidelityWires/elit?status.svg)](https://godoc.org/github.com/FidelityWires/elit)
+[![CircleCI](https://circleci.com/gh/FidelityWires/elit.svg?style=shield&circle-token=404a3db148e2ff6d7047b60c628f69b1e97d8077)](https://circleci.com/gh/FidelityWires/elit) [![Go Report Card](https://goreportcard.com/badge/github.com/fidelitywires/elit)](https://goreportcard.com/report/github.com/fidelitywires/elit)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FFidelityWires%2Felit.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FFidelityWires%2Felit?ref=badge_shield) [![GoDoc](https://godoc.org/github.com/FidelityWires/elit?status.svg)](https://godoc.org/github.com/FidelityWires/elit)
 
 Generate elasticsearch index template from golang source code
 
@@ -35,3 +35,6 @@ t.Mappings["sample"] = elit.Type{
 ```
 
 This is sample so see also [ExampleGenerate](elit_test.go) function.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FFidelityWires%2Felit.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FFidelityWires%2Felit?ref=badge_large)
