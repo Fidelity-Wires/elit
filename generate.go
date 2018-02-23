@@ -95,7 +95,7 @@ func selectFromKind(k reflect.Kind, opts *GenerateOption) (PropertyEncoderFunc, 
 	case reflect.Array, reflect.Slice:
 		return arrayEncoder, nil
 	case reflect.Ptr:
-		return boolEncoder, nil
+		return ptrEncoder, nil
 	case reflect.Map, reflect.Interface:
 		return nil, fmt.Errorf("unsupported type: %v", k)
 	}
