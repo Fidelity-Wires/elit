@@ -78,14 +78,16 @@ type PropertyType string
 type FilterType string
 
 const (
-	PropertyTypeDate     PropertyType = "date"
-	PropertyTypeInteger  PropertyType = "integer"
-	PropertyTypeFloat    PropertyType = "float"
-	PropertyTypeText     PropertyType = "text"
-	PropertyTypeGeoPoint PropertyType = "geo_point"
-	PropertyTypeNested   PropertyType = "nested"
-	PropertyTypeKeyword  PropertyType = "keyword"
-	PropertyTypeBoolean  PropertyType = "boolean"
+	PropertyTypeDate      PropertyType = "date"
+	PropertyTypeInteger32 PropertyType = "integer"
+	PropertyTypeInteger64 PropertyType = "long"
+	PropertyTypeFloat32   PropertyType = "float"
+	PropertyTypeFloat64   PropertyType = "double"
+	PropertyTypeText      PropertyType = "text"
+	PropertyTypeGeoPoint  PropertyType = "geo_point"
+	PropertyTypeNested    PropertyType = "nested"
+	PropertyTypeKeyword   PropertyType = "keyword"
+	PropertyTypeBoolean   PropertyType = "boolean"
 
 	FilterTypeSynonym FilterType = "synonym"
 )
