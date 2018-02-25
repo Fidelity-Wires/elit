@@ -16,14 +16,22 @@ type Settings struct {
 
 // Analysis settings
 type Analysis struct {
-	Analyzer map[string]Analyzer `json:"analyzer,omitempty"`
-	Filter   map[string]Filter   `json:"filter,omitempty"`
+	Tokenizer map[string]Tokenizer `json:"tokenizer,omitempty"`
+	Analyzer  map[string]Analyzer  `json:"analyzer,omitempty"`
+	Filter    map[string]Filter    `json:"filter,omitempty"`
 }
 
 // Analyzer .
 type Analyzer struct {
-	Tokenizer string   `json:"tokenizer"`
-	Filter    []string `json:"filter"`
+	Type       *string  `json:"type,omitempty"`
+	Tokenizer  string   `json:"tokenizer"`
+	Filter     []string `json:"filter"`
+	CharFilter []string `json:"char_filter"`
+}
+
+// Tokenizer .
+type Tokenizer struct {
+	Type string `json:"type"`
 }
 
 // Filter for analysis
@@ -70,16 +78,14 @@ type PropertyType string
 type FilterType string
 
 const (
-	PropertyTypeDate      PropertyType = "date"
-	PropertyTypeInteger32 PropertyType = "integer"
-	PropertyTypeInteger64 PropertyType = "long"
-	PropertyTypeFloat32   PropertyType = "float"
-	PropertyTypeFloat64   PropertyType = "double"
-	PropertyTypeText      PropertyType = "text"
-	PropertyTypeGeoPoint  PropertyType = "geo_point"
-	PropertyTypeNested    PropertyType = "nested"
-	PropertyTypeKeyword   PropertyType = "keyword"
-	PropertyTypeBoolean   PropertyType = "boolean"
+	PropertyTypeDate     PropertyType = "date"
+	PropertyTypeInteger  PropertyType = "integer"
+	PropertyTypeFloat    PropertyType = "float"
+	PropertyTypeText     PropertyType = "text"
+	PropertyTypeGeoPoint PropertyType = "geo_point"
+	PropertyTypeNested   PropertyType = "nested"
+	PropertyTypeKeyword  PropertyType = "keyword"
+	PropertyTypeBoolean  PropertyType = "boolean"
 
 	FilterTypeSynonym FilterType = "synonym"
 )
