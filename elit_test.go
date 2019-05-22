@@ -17,7 +17,9 @@ func ExampleGenerate() {
 			NumberOfShards:   5,
 			NumberOfReplicas: 1,
 		},
-		Mappings: map[string]Type{},
+		Mappings: Mappings{
+			Properties: map[string]Property{},
+		},
 	}
 
 	opts := NewGenerateOption()
@@ -26,9 +28,7 @@ func ExampleGenerate() {
 		panic(err)
 	}
 
-	t.Mappings["sample"] = Type{
-		Properties: p,
-	}
+	t.Mappings.Properties = p
 
 	b, err := json.Marshal(t)
 	if err != nil {
@@ -37,5 +37,5 @@ func ExampleGenerate() {
 
 	fmt.Println(string(b))
 	// Output:
-	// {"template":"sample_template_*","settings":{"number_of_shards":5,"number_of_replicas":1},"mappings":{"sample":{"properties":{"Age":{"type":"integer"},"Name":{"type":"text"}}}}}
+	// {"template":"sample_template_*","settings":{"number_of_shards":5,"number_of_replicas":1},"mappings":{"properties":{"Age":{"type":"integer"},"Name":{"type":"text"}}}}
 }

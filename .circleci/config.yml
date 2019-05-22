@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 jobs:
   build:
     working_directory: ~/elit
@@ -18,4 +18,4 @@ jobs:
       - run:
           name: test
           command: |
-            docker-compose run elit go test -cover ./...
+            make test
