@@ -2,9 +2,14 @@ package elit
 
 // Template is root object
 type Template struct {
-	Template string          `json:"template"`
-	Settings Settings        `json:"settings"`
-	Mappings map[string]Type `json:"mappings"`
+	Template string   `json:"template"`
+	Settings Settings `json:"settings"`
+	Mappings Mappings `json:"mappings"`
+}
+
+// Mappings has property
+type Mappings struct {
+	Properties map[string]Property `json:"properties"`
 }
 
 // Settings node settings
@@ -40,13 +45,6 @@ type Filter struct {
 	Format      string     `json:"format,omitempty"`
 	SynonymPath string     `json:"synonym_path,omitempty"`
 	Synonyms    []Synonym  `json:"synonyms,omitempty"`
-}
-
-// Type .
-type Type struct {
-	All        *All                `json:"_all,omitempty"`
-	Source     *Source             `json:"_source,omitempty"`
-	Properties map[string]Property `json:"properties,omitempty"`
 }
 
 // Source .

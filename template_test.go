@@ -8,63 +8,56 @@ import (
 
 func TestMappingsMarshalJSON(t *testing.T) {
 	table := []struct {
-		mappings map[string]Type
+		mappings Mappings
 		out      string
 	}{
 		{
-			mappings: map[string]Type{
-				"_defualt_": Type{
-					All: &All{
-						Enabled: true,
+			mappings: Mappings{
+				Properties: map[string]Property{
+					"@timestamp": Property{
+						Type:   PropertyTypeDate,
+						Format: "yyyy-MM-dd'T'HH:mm:ssZ",
 					},
-				},
-				"some_type": Type{
-					Properties: map[string]Property{
-						"@timestamp": Property{
-							Type:   PropertyTypeDate,
-							Format: "yyyy-MM-dd'T'HH:mm:ssZ",
-						},
-						"count": Property{
-							Type: PropertyTypeInteger64,
-						},
-						"location": Property{
-							Type: PropertyTypeGeoPoint,
-						},
-						"word": Property{
-							Type:      PropertyTypeText,
-							FieldData: true,
-							Fields: map[string]Property{
-								"keyword": Property{
-									Type:        PropertyTypeKeyword,
-									IgnoreAbove: 256,
-								},
+					"count": Property{
+						Type: PropertyTypeInteger64,
+					},
+					"location": Property{
+						Type: PropertyTypeGeoPoint,
+					},
+					"word": Property{
+						Type:      PropertyTypeText,
+						FieldData: true,
+						Fields: map[string]Property{
+							"keyword": Property{
+								Type:        PropertyTypeKeyword,
+								IgnoreAbove: 256,
 							},
 						},
-						"object": Property{
-							Type: PropertyTypeNested,
-							Properies: map[string]Property{
-								"title": Property{
-									Type:        PropertyTypeKeyword,
-									IgnoreAbove: 256,
-								},
-								"user": Property{
-									Type: PropertyTypeNested,
-									Properies: map[string]Property{
-										"first_name": Property{
-											Type: PropertyTypeKeyword,
-										},
-										"last_name": Property{
-											Type: PropertyTypeKeyword,
-										},
-										"age": Property{
-											Type: PropertyTypeInteger32,
-										},
-										"height": Property{
-											Type: PropertyTypeFloat32,
-										},
-										"weight": Property{
-											Type: PropertyTypeFloat64,
-										},
+					},
+					"object": Property{
+						Type: PropertyTypeNested,
+						Properies: map[string]Property{
+							"title": Property{
+								Type:        PropertyTypeKeyword,
+								IgnoreAbove: 256,
+							},
+							"user": Property{
+								Type: PropertyTypeNested,
+								Properies: map[string]Property{
+									"first_name": Property{
+										Type: PropertyTypeKeyword,
+									},
+									"last_name": Property{
+										Type: PropertyTypeKeyword,
+									},
+									"age": Property{
+										Type: PropertyTypeInteger32,
+									},
+									"height": Property{
+										Type: PropertyTypeFloat32,
+									},
+									"weight": Property{
+										Type: PropertyTypeFloat64,
 									},
 								},
 							},
@@ -72,7 +65,7 @@ func TestMappingsMarshalJSON(t *testing.T) {
 					},
 				},
 			},
-			out: `{"_defualt_":{"_all":{"enabled":true}},"some_type":{"properties":{"@timestamp":{"type":"date","format":"yyyy-MM-dd'T'HH:mm:ssZ"},"count":{"type":"long"},"location":{"type":"geo_point"},"object":{"type":"nested","properties":{"title":{"type":"keyword","ignore_above":256},"user":{"type":"nested","properties":{"age":{"type":"integer"},"first_name":{"type":"keyword"},"height":{"type":"float"},"last_name":{"type":"keyword"},"weight":{"type":"double"}}}}},"word":{"type":"text","fielddata":true,"fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}`,
+			out: `{"properties":{"@timestamp":{"type":"date","format":"yyyy-MM-dd'T'HH:mm:ssZ"},"count":{"type":"long"},"location":{"type":"geo_point"},"object":{"type":"nested","properties":{"title":{"type":"keyword","ignore_above":256},"user":{"type":"nested","properties":{"age":{"type":"integer"},"first_name":{"type":"keyword"},"height":{"type":"float"},"last_name":{"type":"keyword"},"weight":{"type":"double"}}}}},"word":{"type":"text","fielddata":true,"fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}`,
 		},
 	}
 
@@ -83,7 +76,7 @@ func TestMappingsMarshalJSON(t *testing.T) {
 		}
 		// fmt.Println(string(b))
 
-		m := map[string]Type{}
+		m := Mappings{}
 		if err := json.Unmarshal([]byte(row.out), &m); err != nil {
 			t.Fatalf("json.Unmarshal got error: %s", err)
 		}
@@ -105,24 +98,19 @@ func TestTemplateMarshalJSON(t *testing.T) {
 				Settings: Settings{
 					NumberOfShards: 1,
 				},
-				Mappings: map[string]Type{
-					"type1": Type{
-						Source: &Source{
-							Enabled: false,
+				Mappings: Mappings{
+					Properties: map[string]Property{
+						"host_name": {
+							Type: "keyword",
 						},
-						Properties: map[string]Property{
-							"host_name": {
-								Type: "keyword",
-							},
-							"created_at": {
-								Type:   "date",
-								Format: "EEE MMM dd HH:mm:ss Z YYYY",
-							},
+						"created_at": {
+							Type:   "date",
+							Format: "EEE MMM dd HH:mm:ss Z YYYY",
 						},
 					},
 				},
 			},
-			out: `{"template":"te*","settings":{"number_of_shards":1},"mappings":{"type1":{"_source":{"enabled":false},"properties":{"created_at":{"type":"date","format":"EEE MMM dd HH:mm:ss Z YYYY"},"host_name":{"type":"keyword"}}}}}`,
+			out: `{"template":"te*","settings":{"number_of_shards":1},"mappings":{"properties":{"created_at":{"type":"date","format":"EEE MMM dd HH:mm:ss Z YYYY"},"host_name":{"type":"keyword"}}}}`,
 		},
 	}
 

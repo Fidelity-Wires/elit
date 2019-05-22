@@ -1,4 +1,4 @@
-FROM golang:1.9-alpine
+FROM golang:1.12.4-alpine3.9
 LABEL maintainer "UshioShugo<ushio.s@gmail.com>"
 
 ENV APP_PATH=${GOPATH}/src/github.com/fidelitywires/elit
